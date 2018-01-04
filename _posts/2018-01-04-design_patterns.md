@@ -96,3 +96,4 @@ title: 设计模式--简记
     lala: 大体恤
     lala: 装扮者:Javen
     {{ page.date|date_to_string }}
+
