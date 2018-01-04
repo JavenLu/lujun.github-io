@@ -14,7 +14,7 @@ title: 设计模式--简记
 
     基本使用场景：对某个对象进行功能扩展，且功能按新-老排序。
     代码片段：
-<pre><code>
+
     public class Person {
    
     public Person() {
@@ -87,8 +87,8 @@ title: 设计模式--简记
         bigTrouser.show();
 
     }
-}
-    </code></pre>
+    }
+    
 
     结果：
 
