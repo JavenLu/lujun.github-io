@@ -9,12 +9,12 @@ title: 设计模式--简记
 + [装饰模式](#partI)
 + [简单工厂模式](#partII)
 + [策略模式](#partIII)
-
++ [代理模式](#partIV)
 ----------------------------------
 
 ## 装饰模式
 
-    基本使用场景：对某个对象进行功能扩展，且功能按新-老排序。
+    基本使用场景：对某个对象进行功能叠加扩展，且功能按新-老排序。
     代码片段：
 
     public class Person {
@@ -382,10 +382,110 @@ title: 设计模式--简记
 
     }
     
+    
+    ----------------------------------
 
-
-
+## 代理模式
+    代理的概念：代理其实就是在访问对象时引入一定程度的间接性，因为这种间接性，可以附加多种用途。
+    通俗理解：你在某些时候，直接去干一些事情，并不能起到很好的效果，反而适得其反。这时就需要一个中间人去帮你完成这些工作。
+    好处：代理模式最直接的好处就是代码隔离，降低耦合，高度可维护性，封装性好。
+    
+    代理的应用：
+    1.远程代理，也就是为一个对象在不同的地址空间提供局部代表，这样可以隐藏一个对象存在于不同地址空间的事实。
+    2.虚拟代理，是根据需要创建开销很大的对象，通过它来存放实例化需要很长时间的真实对象。
+    3.安全代理，用来控制真是对象访问时的权限。
+    4.智能指引，当调用真是的对象时，代理处理另外一些事。
+    5.个人已经讲这个模式应用在了RecyclerView 的Adapter中，也通过此实践，深刻理解了“组合大于继承”这句话。
+    
+    public abstract class ProxyInterface {
+    abstract void sendPhone();
+    
+    abstract void sendComputer();
+    
+    abstract void sendWatch();
+    }
+    
+    public class ReceivesPerson {
+    public String name;
+    
+    public String getName() {
+    return name;
+    }
+    
+    public void setName(String name) {
+    this.name = name;
+    }
+    }
+    
+    
+    public class RealPerson extends ProxyInterface {
+    ReceivesPerson receivesPerson;
+    
+    public RealPerson(ReceivesPerson receivesPerson) {
+    this.receivesPerson = receivesPerson;
+    }
+    
+    @Override
+    void sendPhone() {
+    System.out.println("送手机给：" + receivesPerson.getName());
+    }
+    
+    @Override
+    void sendComputer() {
+    System.out.println("送电脑给：" + receivesPerson.getName());
+    }
+    
+    @Override
+    void sendWatch() {
+    System.out.println("送手表给：" + receivesPerson.getName());
+    }
+    
+    
+    }
+    
+    public class Proxy extends ProxyInterface {
+    private RealPerson realPerson;
+    
+    public Proxy(ReceivesPerson receivesPerson) {
+    if (realPerson == null) {
+    realPerson = new RealPerson(receivesPerson);
+    }
+    }
+    
+    @Override
+    void sendPhone() {
+    realPerson.sendPhone();
+    }
+    
+    @Override
+    void sendComputer() {
+    realPerson.sendComputer();
+    }
+    
+    @Override
+    void sendWatch() {
+    realPerson.sendWatch();
+    }
+    }
+    
+    
+    public class MainActivity extends AppCompatActivity {
+    @Override
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
+    super.onCreate(savedInstanceState);
+    ReceivesPerson receivesPerson = new ReceivesPerson();
+    receivesPerson.setName("A Beautiful Girl");
+    
+    Proxy proxy = new Proxy(receivesPerson);
+    proxy.sendPhone();
+    proxy.sendComputer();
+    proxy.sendWatch();
+    }
+    }
+    
+    
 ----------------------------------
+
     {{ page.date|date_to_string }}
 
 
