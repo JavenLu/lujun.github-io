@@ -10,6 +10,7 @@ title: 设计模式--简记
 + [简单工厂模式](#简单工厂模式)
 + [策略模式](#策略模式)
 + [代理模式](#代理模式)
++ [工厂模式](#工厂模式)
 
 ----------------------------------
 
@@ -483,6 +484,88 @@ title: 设计模式--简记
     proxy.sendPhone();
     proxy.sendComputer();
     proxy.sendWatch();
+    }
+    }
+    
+## 工厂模式
+
+    基本使用场景：工厂模式与简单工厂模式的区别，简单来讲前者比后者更加抽象，客户端在使用时不用再通过条件进行判断，而是直接创造某一类的工厂，生成具体的某一类的对象，进行操作。好处是避免了switch case，需要什么类型就创建或添加类型工厂就可以了。克服了开放-封闭原则的缺点--对修改的封闭。页使其不做大的改动就可以实现。 同时降低了耦合性。缺点还是没有避免修改客户端代码。
+    
+    代码片段：
+    
+    public abstract class WarPlane {
+    abstract void bomb();
+    
+    abstract void fight();
+    
+    abstract void cruise();
+    }
+    
+    
+    public class ChinaPlane extends WarPlane {
+    @Override
+    void bomb() {
+    System.out.println("中国轰炸");
+    }
+    
+    @Override
+    void fight() {
+    System.out.println("中国格斗");
+    }
+    
+    @Override
+    void cruise() {
+    System.out.println("中国巡航");
+    }
+    }
+    
+    
+    public class RussiaPlane extends WarPlane {
+    @Override
+    void bomb() {
+    System.out.println("俄国轰炸");
+    }
+    
+    @Override
+    void fight() {
+    System.out.println("俄国格斗");
+    }
+    
+    @Override
+    void cruise() {
+    System.out.println("俄国巡航");
+    }
+    }
+    
+    public interface IFactory {
+    WarPlane createWarPlane();
+    }
+    
+    
+    public class ChinaWarPlaneFactory implements IFactory {
+    @Override
+    public WarPlane createWarPlane() {
+    return new ChinaPlane();
+    }
+    }
+    
+    
+    public class RussiaWarPlaneFactory implements IFactory {
+    @Override
+    public WarPlane createWarPlane() {
+    return new RussiaPlane();
+    }
+    }
+    
+    public class MainActivity extends AppCompatActivity {
+    @Override
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
+    super.onCreate(savedInstanceState);
+    IFactory iFactory = new ChinaWarPlaneFactory();
+    WarPlane warPlane = iFactory.createWarPlane();
+    warPlane.bomb();
+    warPlane.fight();
+    warPlane.cruise();
     }
     }
     
