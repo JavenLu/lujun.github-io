@@ -204,7 +204,7 @@ AndroidManifest.xml配置
 
 ## 结束
 
-这个库真的非常好用，可是，我还需要第二种需求，那就是模块间的频繁通信及相互调用，ActivityRouter显然侧重在跳转上，不能满足我的需求，而后我在里一片文章里讲到一种组件化框架《ModularizationArchitecture》,此部分内容将在我的后续章节涉及。
+这个库真的非常好用，可是，我还需要第二种需求，那就是模块间的频繁通信及相互调用，ActivityRouter显然侧重在跳转上，不能满足我的需求，而后我发现另一片文章里有一种组件化框架《ModularizationArchitecture》,此部分内容将在我的后续章节涉及。
 
 
     {{ page.date|date_to_string }}
