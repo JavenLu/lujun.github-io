@@ -1,5 +1,5 @@
 ---
-title: 仿今日头条客户端架构思路整理（三）
+title:SmartNews客户端架构思路整理（三）
 ---
 
 # {{ page.title }}
