@@ -68,6 +68,7 @@ news模块：
 
 ![](http://a4.qpic.cn/psb?/V11eJGIx1VE7bR/c96EuiKK9HBaOxoAQYya0JV9m4obz2f0TBB7atl7I1c!/m/dFcBAAAAAAAAnull&bo=1ASAAgAAAAADB3A!&rf=photolist&t=5)
 
+注意：上图一定要使用compile,不要使用 implementation.因为implementation外部模块是无法访问到内部资源的。
 
 #### 路由的使用：
 
@@ -172,7 +173,7 @@ news模块：
 
 ## 结束
 
-本篇重点梳理了SmartNews项目的整体架构及实现方式，这三篇文章记录了自己学习并熟练掌握组件化的原由，以及相关资源。从整体上梳理一下思路。
+本篇重点梳理了SmartNews项目的整体架构及实现方式，这三篇文章记录了自己学习并熟练掌握组件化的原由及实现的思路与资源。从整体上梳理一下思路。
     
     
 
