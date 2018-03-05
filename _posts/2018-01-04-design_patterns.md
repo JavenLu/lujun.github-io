@@ -11,6 +11,7 @@ title: 设计模式--简记
 + [策略模式](#策略模式)
 + [代理模式](#代理模式)
 + [工厂模式](#工厂模式)
++ [建造者模式](#建造者模式)
 
 ----------------------------------
 
@@ -569,6 +570,173 @@ title: 设计模式--简记
     }
     }
     
+    
+## 建造者模式
+
+    概念：将一个复杂对象的构建与它的表示分离，使得同样的构建过程可以创建不同的表示。
+    
+    代码片段：
+    
+    构造对象
+    public class CustomDialog extends AlertDialog {
+    
+    private String name;
+    private String sex;
+    private String age;
+    
+    protected CustomDialog(@NonNull Context context) {
+    super(context);
+    }
+    
+    public void setName(String name) {
+    this.name = name;
+    }
+    
+    public String getName() {
+    return name;
+    }
+    
+    public String getSex() {
+    return sex;
+    }
+    
+    public void setSex(String sex) {
+    this.sex = sex;
+    }
+    
+    public String getAge() {
+    return age;
+    }
+    
+    public void setAge(String age) {
+    this.age = age;
+    }
+    
+    public void showInfo() {
+    System.out.println(getName());
+    System.out.println(getSex());
+    System.out.println(getAge());
+    }
+    }
+    
+    
+    构造器抽象类
+    public abstract class Builder {
+    
+    public abstract void setName();
+    
+    public abstract void setSex();
+    
+    public abstract void setAge();
+    
+    public abstract CustomDialog getDialogInstance();
+    
+    }
+    
+    
+    构造器A
+    public class CustomBuilderA extends Builder {
+    private CustomDialog customDialog;
+    
+    public CustomBuilderA(Context context) {
+    customDialog = new CustomDialog(context);
+    }
+    
+    
+    @Override
+    public void setName() {
+    customDialog.setName("李蕾");
+    }
+    
+    @Override
+    public void setSex() {
+    customDialog.setSex("男");
+    }
+    
+    @Override
+    public void setAge() {
+    customDialog.setAge("21");
+    }
+    
+    @Override
+    public CustomDialog getDialogInstance() {
+    return customDialog;
+    }
+    }
+    
+    
+    构造器B
+    public class CustomBuilderB extends Builder {
+    private CustomDialog customDialog;
+    
+    public CustomBuilderB(Context context) {
+    customDialog = new CustomDialog(context);
+    }
+    
+    
+    @Override
+    public void setName() {
+    customDialog.setName("韩梅梅");
+    }
+    
+    @Override
+    public void setSex() {
+    customDialog.setSex("女");
+    }
+    
+    @Override
+    public void setAge() {
+    customDialog.setAge("18");
+    }
+    
+    @Override
+    public CustomDialog getDialogInstance() {
+    return customDialog;
+    }
+    }
+    
+    
+    导演者
+    public class Director {
+    
+    public void Construct(Builder builder) {
+    builder.setName();
+    builder.setSex();
+    builder.setAge();
+    }
+    }
+    
+    
+    调用类
+    public class BuilderModeActivity extends AppCompatActivity {
+    @Override
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
+    super.onCreate(savedInstanceState);
+    Builder builderA = new CustomBuilderA(this);
+    Builder builderB = new CustomBuilderB(this);
+    
+    Director director = new Director();
+    director.Construct(builderA);
+    
+    CustomDialog customDialogA = builderA.getDialogInstance();
+    customDialogA.showInfo();
+    
+    director.Construct(builderB);
+    CustomDialog customDialogB = builderB.getDialogInstance();
+    customDialogB.showInfo();
+    
+    
+    }
+    }
+    
+    结果：
+    李蕾
+    男
+    21
+    韩梅梅
+    女
+    18
+
     
 ----------------------------------
     {{ page.date|date_to_string }}
