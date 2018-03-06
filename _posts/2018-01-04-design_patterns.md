@@ -12,6 +12,7 @@ title: 设计模式--简记
 + [代理模式](#代理模式)
 + [工厂模式](#工厂模式)
 + [建造者模式](#建造者模式)
++ [适配器模式](#适配器模式)
 
 ----------------------------------
 
@@ -736,6 +737,165 @@ title: 设计模式--简记
     韩梅梅
     女
     18
+    
+
+## 适配器模式
+
+
+    概念：将一个类的接口转换成客户希望的另外一个接口。Adapter 模式使得原本由于接口不兼容而不能一起工作的那些类可以一起工作。
+
+    基本使用场景：系统的数据和行为都正确，但接口不符时，我们应该考虑用适配器，目的是使控制范围之外的一个原有对象与某个接口匹配。适配器模式主要应用于希望复用一些现存的类，但是接口又与复用环境要求不一致的情况。
+
+    种类：适配器模式有两种，类适配器和对象适配器，由于类适配器模式通过多继承对一个接口与另一个接口进行匹配，但java不支持多继承，所以主要研究对象适配器。
+
+    代码片段：
+    
+    public abstract class Player {
+    public String name;
+    
+    public Player(String name) {
+    this.name = name;
+    }
+    
+    public abstract void attack();
+    
+    public abstract void defense();
+    }
+    
+    
+    
+    public class Forwards extends Player {
+    
+    public Forwards(String name) {
+    super(name);
+    }
+    
+    @Override
+    public void attack() {
+    System.out.println("前锋 " + name + " 进攻");
+    }
+    
+    @Override
+    public void defense() {
+    System.out.println("前锋 " + name + " 防守");
+    }
+    }
+    
+    
+    public class Center extends Player {
+    
+    public Center(String name) {
+    super(name);
+    }
+    
+    @Override
+    public void attack() {
+    System.out.println("中锋 " + name + " 进攻");
+    }
+    
+    @Override
+    public void defense() {
+    System.out.println("中锋 " + name + " 防守");
+    }
+    }
+    
+    
+    public class Guards extends Player {
+    
+    public Guards(String name) {
+    super(name);
+    }
+    
+    @Override
+    public void attack() {
+    System.out.println("后卫 " + name + " 进攻");
+    }
+    
+    @Override
+    public void defense() {
+    System.out.println("后卫 " + name + " 防守");
+    }
+    }
+    
+    
+    public class ForeignCenter {
+    private String name;
+    
+    public String getName() {
+    return name;
+    }
+    
+    public void setName(String name) {
+    this.name = name;
+    }
+    
+    public void 进攻() {
+    System.out.println("外籍中锋 " + name + " 进攻");
+    }
+    
+    public void 防守() {
+    System.out.println("外籍中锋 " + name + " 防守");
+    }
+    
+    }
+    
+    
+    public class Translator extends Player {
+    
+    private ForeignCenter foreignCenter;
+    
+    public Translator(String name) {
+    super(name);
+    foreignCenter = new ForeignCenter();
+    foreignCenter.setName(name);
+    }
+    
+    @Override
+    public void attack() {
+    foreignCenter.进攻();
+    }
+    
+    @Override
+    public void defense() {
+    foreignCenter.防守();
+    }
+    }
+    
+    
+    public class AdapterModeActivity extends AppCompatActivity {
+    @Override
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
+    super.onCreate(savedInstanceState);
+    Player player = new Center("奥尼尔");
+    player.attack();
+    player.defense();
+    
+    Player player1 = new Forwards("诺维茨基");
+    player1.attack();
+    player1.defense();
+    
+    Player player2 = new Guards("林书豪");
+    player2.attack();
+    player2.defense();
+    
+    Player foreignCenter = new Translator("姚明");
+    foreignCenter.attack();
+    foreignCenter.defense();
+    }
+    }
+    
+    
+    结果：
+    
+    中锋 奥尼尔 进攻
+    中锋 奥尼尔 防守
+    前锋 诺维茨基 进攻
+    前锋 诺维茨基 防守
+    后卫 林书豪 进攻
+    后卫 林书豪 防守
+    外籍中锋 姚明 进攻
+    外籍中锋 姚明 防守
+    
 
     
 ----------------------------------
