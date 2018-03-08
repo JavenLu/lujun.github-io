@@ -13,6 +13,7 @@ title: 设计模式--简记
 + [工厂模式](#工厂模式)
 + [建造者模式](#建造者模式)
 + [适配器模式](#适配器模式)
++ [外观模式](#外观模式)
 
 ----------------------------------
 
@@ -896,7 +897,105 @@ title: 设计模式--简记
     外籍中锋 姚明 进攻
     外籍中锋 姚明 防守
     
+    
+## 外观模式
 
+
+    概念：为子系统中的一组接口提供一个一致的界面，此模式定义了一个高层接口，这个接口使得这子系统更加容易使用。
+    白话：客户端无需对应多个子系统，关注多个变化，只需要通过外观类统一管理子系统就可以，客户端只与外观类进行互动。
+    基本使用场景：1.程序架构时，层与层之间建立外观，使耦合大大降低。 2.减少各子系统的依赖。3.在维护一个大型系统时，可能这个系统
+    已经非常难以维护和扩展了，构建一个新系统，为新系统开发一个外观类，来提供设计粗糙或高度复杂的遗留代码的比较清晰的接口，让新系统
+    与外观类对象交互，外观类与遗留代码交互所有复杂的工作。
+    
+    代码片段：
+    
+    
+    public abstract class BaseSystem {
+    public String name;
+    
+    public BaseSystem(String name) {
+    this.name = name;
+    }
+    
+    public abstract void executeTask();
+    
+    }
+    
+    
+    
+    public class SystemOne extends BaseSystem {
+    
+    public SystemOne(String name) {
+    super(name);
+    }
+    
+    @Override
+    public void executeTask() {
+    System.out.println("SystemOne " + name);
+    }
+    
+    
+    }
+    
+    
+    
+    public class SystemTwo extends BaseSystem {
+    
+    public SystemTwo(String name) {
+    super(name);
+    }
+    
+    @Override
+    public void executeTask() {
+    System.out.println("SystemTwo " + name);
+    }
+    
+    
+    }
+    
+    
+    public class Facade {
+    private SystemOne systemOne;
+    private SystemTwo systemTwo;
+    
+    private static Facade facade;
+    
+    public Facade() {
+    systemOne = new SystemOne("李蕾");
+    systemTwo = new SystemTwo("韩梅梅");
+    }
+    
+    public static Facade getInstants() {
+    if (facade == null) {
+    facade = new Facade();
+    }
+    
+    return facade;
+    }
+    
+    
+    public void executeTaskA() {
+    systemOne.executeTask();
+    }
+    
+    public void executeTaskB() {
+    systemTwo.executeTask();
+    }
+    
+    
+    }
+    
+    
+    public class Client extends AppCompatActivity {
+    @Override
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
+    super.onCreate(savedInstanceState);
+    Facade.getInstants().executeTaskA();
+    Facade.getInstants().executeTaskB();
+    }
+    }
+    
+    
     
 ----------------------------------
     {{ page.date|date_to_string }}
