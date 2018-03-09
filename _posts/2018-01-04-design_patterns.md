@@ -1,3 +1,4 @@
+
 ---
 title: 设计模式--简记
 ---
@@ -15,6 +16,7 @@ title: 设计模式--简记
 + [适配器模式](#适配器模式)
 + [外观模式](#外观模式)
 + [组合模式](#组合模式)
++ [模版方法模式](#模版方法模式)
 
 ----------------------------------
 
@@ -1005,6 +1007,8 @@ title: 设计模式--简记
     基本使用场景：当你发现需求中是体现部分与整体层次结构时，以及你希望忽略组合对象与单个对象的不同，统一的使用组合结构中的所有对象时，就应该考虑用组合模式了。
     
     好处：组合模式让客户可以一致地使用组合结构和单个对象。
+    
+    代码片段：
 
     public abstract class Component {
     protected String name;
@@ -1125,6 +1129,99 @@ title: 设计模式--简记
     
     
     }
+    
+    
+## 模版方法模式
+
+    概念：定义一个操作中的算法的骨架，而将一些步骤延迟到子类中。模版方法使得子类可以不改变一个算法的结构即可重定义该算法的某些特定步骤。
+    
+    基本应用场景：当不变的和可变的行为在方法的子类实现中混合在一起的时候，不变的行为就会在子类中重复出现。我们通过模版方法模式把这些行为
+    搬移到单一的地方，这样就帮助子类摆脱重复的不变行为纠缠。
+    
+    好处：代码复用。
+    
+    代码片段：
+    
+    public abstract class Father {
+    private String tag;
+    
+    public Father(String tag) {
+    this.tag = tag;
+    }
+    
+    public abstract String method1();
+    
+    public abstract String method2();
+    
+    public void executeTask() {
+    System.out.println(tag + " " + method1());
+    System.out.println(tag + " " + method2());
+    }
+    
+    }
+    
+   
+    public class Child1 extends Father {
+    public static final String TAG = Child1.class.getSimpleName();
+    
+    public Child1() {
+    super(TAG);
+    }
+    
+    @Override
+    public String method1() {
+    return "method1";
+    }
+    
+    @Override
+    public String method2() {
+    return "method2";
+    }
+    }
+    
+    
+    public class Child2 extends Father {
+    public static final String TAG = Child2.class.getSimpleName();
+    
+    public Child2() {
+    super(TAG);
+    }
+    
+    @Override
+    public String method1() {
+    return "method1";
+    }
+    
+    @Override
+    public String method2() {
+    return "method2";
+    }
+    }
+
+
+    public class TemplateModeActivity extends AppCompatActivity {
+    Father father;
+
+    @Override
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
+    super.onCreate(savedInstanceState);
+    father = new Child1();
+    father.executeTask();
+
+    father = new Child2();
+    father.executeTask();
+    }
+    }
+    
+    
+    结果：
+    
+    Child1 method1
+    Child1 method2
+    Child2 method1
+    Child2 method2
+    
+
     
     
     
