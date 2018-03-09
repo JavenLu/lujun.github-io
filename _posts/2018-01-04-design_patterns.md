@@ -14,6 +14,7 @@ title: 设计模式--简记
 + [建造者模式](#建造者模式)
 + [适配器模式](#适配器模式)
 + [外观模式](#外观模式)
++ [组合模式](#组合模式)
 
 ----------------------------------
 
@@ -993,6 +994,136 @@ title: 设计模式--简记
     Facade.getInstants().executeTaskA();
     Facade.getInstants().executeTaskB();
     }
+    }
+    
+    
+## 组合模式
+
+
+    概念：将对象组合成一个树形结构以表示“部分-整体”的层次结构，组合模式使得用户对单个对象和组合对象的使用具有一致性。
+    
+    基本使用场景：当你发现需求中是体现部分与整体层次结构时，以及你希望忽略组合对象与单个对象的不同，统一的使用组合结构中的所有对象时，就应该考虑用组合模式了。
+    
+    好处：组合模式让客户可以一致地使用组合结构和单个对象。
+
+    public abstract class Component {
+    protected String name;
+
+    public Component(String name) {
+    this.name = name;
+    }
+
+    public abstract void add(Component component);
+
+    public abstract void remove(Component component);
+
+    public abstract void display(int depth);
+
+
+    }
+    
+    
+    public class Leaf extends Component {
+    
+    public Leaf(String name) {
+    super(name);
+    }
+    
+    @Override
+    public void add(Component component) {
+    
+    }
+    
+    @Override
+    public void remove(Component component) {
+    
+    }
+    
+    @Override
+    public void display(int depth) {
+    
+    }
+    }
+    
+    
+    public class Composite extends Component {
+    private List<Component> children = new ArrayList<>();
+    
+    public Composite(String name) {
+    super(name);
+    }
+    
+    @Override
+    public void add(Component component) {
+    children.add(component);
+    }
+    
+    @Override
+    public void remove(Component component) {
+    children.remove(component);
+    }
+    
+    @Override
+    public void display(int depth) {
+    synchronized (this) {
+    System.out.println(depth + "-" + name);
+    
+    for (Component component : children) {
+    component.display(depth + 2);
+    System.out.println(depth + "child -" + component.name);
+    }
+    }
+    
+    }
+    
+    
+    public class ComponentActivity extends AppCompatActivity {
+    @Override
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
+    super.onCreate(savedInstanceState);
+    Composite root = new Composite("root");
+    root.add(new Leaf("Leaf A"));
+    root.add(new Leaf("Leaf B"));
+    
+    Composite comp = new Composite("Composite X");
+    comp.add(new Leaf("Leaf XA"));
+    comp.add(new Leaf("Leaf XB"));
+    
+    Composite comp2 = new Composite("Composite XY");
+    comp2.add(new Leaf("Leaf XYA"));
+    comp2.add(new Leaf("Leaf XYB"));
+    
+    comp.add(comp2);
+    
+    root.add(comp);
+    
+    root.add(new Leaf("Leaf C"));
+    Leaf leaf = new Leaf("Leaf D");
+    root.add(leaf);
+    root.remove(leaf);
+    
+    root.display(1);
+    
+    
+    }
+    }
+    
+    
+    结果：
+    1-root
+    1child -Leaf A
+    1child -Leaf B
+    3-Composite X
+    3child -Leaf XA
+    3child -Leaf XB
+    5-Composite XY
+    5child -Leaf XYA
+    5child -Leaf XYB
+    3child -Composite XY
+    1child -Composite X
+    1child -Leaf C
+    
+    
     }
     
     
