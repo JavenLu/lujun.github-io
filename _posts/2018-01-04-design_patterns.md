@@ -16,6 +16,7 @@ title: 设计模式 -- 简记
 + [外观模式](#外观模式)
 + [组合模式](#组合模式)
 + [模版方法模式](#模版方法模式)
++ [观察者模式](#观察者模式)
 
 ----------------------------------
 
@@ -1219,6 +1220,119 @@ title: 设计模式 -- 简记
     Child1 method2
     Child2 method1
     Child2 method2
+    
+    
+## 观察者模式
+
+
+    概念：定义了一种一对多的依赖关系，让多个观察者对象同时监听某一个主题对象。这个主题对象在状态发生变化时，会通知所有观察者对象，使它们能够自动更新自己。
+    
+    基本使用场景：1.当一个对象的改变需要同时改变其他对象且它不知道具体有多少对象有待改变时。 2.一个抽象模型有两个方面，其中一方面依赖于另一方面，这时用观察者模式可以将这两者封装在独立的对象中，使它们各自独立的改变和复用。
+    
+    特点：观察者模式所做的工作其实就是在解除耦合。让耦合的双方都依赖于抽象，而不是依赖于具体。从而使得各自的变化都不会影响另一边的变化。
+    
+    代码片段：
+    
+    public abstract class Subject {
+    private List<Observer> observerList = new ArrayList<>();
+    
+    public void addObserver(Observer observer) {
+    observerList.add(observer);
+    }
+    
+    public void removeObserver(Observer observer) {
+    observerList.remove(observer);
+    }
+    
+    public void notifyObserver() {
+    for (Observer observer : observerList) {
+    observer.update();
+    }
+    }
+    
+    
+    }
+    
+    
+    public class MotherShip extends Subject {
+    private String state;
+    
+    public String getState() {
+    return state;
+    }
+    
+    public void setState(String state) {
+    this.state = state;
+    }
+    }
+    
+    
+    public abstract class Observer {
+    public abstract void update();
+    }
+    
+    
+    public class ShipA extends Observer {
+    private Subject subject;
+    private String name;
+    
+    public ShipA(Subject subject, String name) {
+    this.subject = subject;
+    this.name = name;
+    }
+    
+    @Override
+    public void update() {
+    System.out.println("母舰状态：" + ((MotherShip) subject).getState());
+    System.out.println("飞船A是否开火：" + ((MotherShip) subject).getState());
+    }
+    }
+    
+    
+    public class ShipB extends Observer {
+    
+    private Subject subject;
+    private String name;
+    
+    public ShipB(Subject subject, String name) {
+    this.subject = subject;
+    this.name = name;
+    }
+    
+    @Override
+    public void update() {
+    System.out.println("母舰状态：" + ((MotherShip) subject).getState());
+    System.out.println("飞船B是否开火：" + ((MotherShip) subject).getState());
+    }
+    
+    
+    }
+    
+    
+    public class ObserverModeActivity extends AppCompatActivity {
+    @Override
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
+    super.onCreate(savedInstanceState);
+    MotherShip motherShip = new MotherShip();
+    
+    motherShip.addObserver(new ShipA(motherShip, "飞船A"));
+    motherShip.addObserver(new ShipB(motherShip, "飞船B"));
+    
+    motherShip.setState("开火");
+    motherShip.notifyObserver();
+    
+    }
+    }
+    
+    
+    结果：
+    
+    母舰状态：开火
+    飞船A是否开火：开火
+    母舰状态：开火
+    飞船B是否开火：开火
+    
+    
     
 
     
