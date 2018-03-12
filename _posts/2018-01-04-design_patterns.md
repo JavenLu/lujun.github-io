@@ -17,6 +17,7 @@ title: 设计模式 -- 简记
 + [组合模式](#组合模式)
 + [模版方法模式](#模版方法模式)
 + [观察者模式](#观察者模式)
++ [职责链模式](#职责链模式)
 
 ----------------------------------
 
@@ -1332,6 +1333,175 @@ title: 设计模式 -- 简记
     母舰状态：开火
     飞船B是否开火：开火
     
+    
+## 职责链模式
+
+
+    概念：使多个对象都有机会处理请求，从而避免请求的发送者和接收者之间的耦合关系。将这个对象连成一条链，并沿着这条链传递该请求，直到
+    有一个对象处理它为止。
+
+    代码片段：
+    
+    
+    public abstract class Manager {
+    public String name;
+    public Manager superior;
+    
+    public Manager(String name) {
+    this.name = name;
+    }
+    
+    public void setSuperior(Manager superior) {
+    this.superior = superior;
+    }
+    
+    public abstract void handleRequest(Request request);
+    
+    
+    }
+    
+    
+    public class Request {
+    private String requestType;
+    private String requestContent;
+    private int requestNumber;
+    
+    public int getRequestNumber() {
+    return requestNumber;
+    }
+    
+    public void setRequestNumber(int requestNumber) {
+    this.requestNumber = requestNumber;
+    }
+    
+    public String getRequestType() {
+    return requestType;
+    }
+    
+    public void setRequestType(String requestType) {
+    this.requestType = requestType;
+    }
+    
+    public String getRequestContent() {
+    return requestContent;
+    }
+    
+    public void setRequestContent(String requestContent) {
+    this.requestContent = requestContent;
+    }
+    
+    }
+    
+    
+    public class Leader extends Manager {
+    
+    public Leader(String name) {
+    super(name);
+    }
+    
+    @Override
+    public void handleRequest(Request request) {
+    if (request.getRequestType().equals("请假") && request.getRequestNumber() <= 2) {
+    System.out.println(name + "批准" + request.getRequestType() + "内容: "
+    + request.getRequestContent());
+    } else {
+    superior.handleRequest(request);
+    }
+    }
+    }
+    
+    
+    public class Cto extends Manager {
+    
+    public Cto(String name) {
+    super(name);
+    }
+    
+    @Override
+    public void handleRequest(Request request) {
+    if (request.getRequestType().equals("请假") && request.getRequestNumber() <= 5) {
+    System.out.println(name + "批准" + request.getRequestType() + "内容: "
+    + request.getRequestContent());
+    } else if (request.getRequestType().equals("加薪") && request.getRequestNumber() <= 500) {
+    System.out.println(name + "批准" + request.getRequestType() + "内容: "
+    + request.getRequestContent());
+    } else {
+    superior.handleRequest(request);
+    }
+    }
+    }
+    
+    
+    public class Ceo extends Manager {
+    
+    public Ceo(String name) {
+    super(name);
+    }
+    
+    @Override
+    public void handleRequest(Request request) {
+    if (request.getRequestType().equals("请假")) {
+    System.out.println(name + "批准" + request.getRequestType() + "内容: "
+    + request.getRequestContent());
+    } else if (request.getRequestType().equals("加薪") && request.getRequestNumber() < 1000) {
+    System.out.println(name + "批准" + request.getRequestType() + "内容: "
+    + request.getRequestContent());
+    } else if (request.getRequestType().equals("加薪") && request.getRequestNumber() >= 1000) {
+    System.out.println(name + "考虑加薪内容: " + request.getRequestContent());
+    }
+    }
+    }
+    
+    
+    public class ResponsibilityChainModeActivity extends AppCompatActivity {
+    @Override
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
+    super.onCreate(savedInstanceState);
+    
+    Request request1 = new Request();
+    request1.setRequestType("请假");
+    request1.setRequestContent("Jake Wharton 请假2天");
+    request1.setRequestNumber(2);
+    
+    Request request2 = new Request();
+    request2.setRequestType("请假");
+    request2.setRequestContent("Jake Wharton 请假3天");
+    request2.setRequestNumber(3);
+    
+    Request request3 = new Request();
+    request3.setRequestType("加薪");
+    request3.setRequestContent("Jake Wharton 加薪500");
+    request3.setRequestNumber(500);
+    
+    Request request4 = new Request();
+    request4.setRequestType("加薪");
+    request4.setRequestContent("Jake Wharton 加薪2000");
+    request4.setRequestNumber(2000);
+    
+    Leader leader = new Leader("Han");
+    Cto cto = new Cto("Jack");
+    Ceo ceo = new Ceo("Tom");
+    
+    leader.setSuperior(cto);
+    cto.setSuperior(ceo);
+    
+    leader.handleRequest(request1);
+    leader.handleRequest(request2);
+    leader.handleRequest(request3);
+    leader.handleRequest(request4);
+    
+    
+    }
+    }
+    
+    
+    结果：
+    
+    
+    Han批准请假内容: Jake Wharton 请假2天
+    Jack批准请假内容: Jake Wharton 请假3天
+    Jack批准加薪内容: Jake Wharton 加薪500
+    Tom考虑加薪内容: Jake Wharton 加薪2000
     
     
 
