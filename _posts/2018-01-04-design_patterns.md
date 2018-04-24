@@ -1314,13 +1314,13 @@ title: 设计模式 -- 简记
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    MotherShip motherShip = new MotherShip();
+    Subject subject = new MotherShip();
     
-    motherShip.addObserver(new ShipA(motherShip, "飞船A"));
-    motherShip.addObserver(new ShipB(motherShip, "飞船B"));
+    subject.addObserver(new ShipA(subject, "飞船A"));
+    subject.addObserver(new ShipB(subject, "飞船B"));
     
-    motherShip.setState("开火");
-    motherShip.notifyObserver();
+    ((MotherShip) subject).setState("开火");
+    subject.notifyObserver();
     
     }
     }
